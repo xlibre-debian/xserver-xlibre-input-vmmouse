@@ -1,3 +1,9 @@
+xserver-xlibre-input-vmmouse (1:13.2.0.3-1) unstable; urgency=high
+
+  * New upstream version 13.2.0.3
+
+ -- NexusSfan <nexussfan@duck.com>  Thu, 04 Dec 2025 16:46:31 -0800
+
 xserver-xlibre-input-vmmouse (1:13.2.0.2-1) unstable; urgency=medium
 
   * New upstream version 13.2.0.2
