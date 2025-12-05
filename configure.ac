@@ -132,7 +132,7 @@ case $host_os in
 	 AC_DEFINE(VMMOUSE_OS_GENERIC, 1,
 	           [Building for iopl / ioperm capable OS])
      ;;
-     *bsd*)
+     *bsd*|dragonfly*)
          AC_DEFINE(VMMOUSE_OS_BSD, 1, [Building for BSD flavour])
      ;;
      solaris*)
@@ -152,7 +152,7 @@ esac
 case $host_cpu in
      i*86)
 	case $host_os in
-		*freebsd*)	AC_DEFINE(USE_DEV_IO) ;;
+		*freebsd*|*dragonfly*)	AC_DEFINE(USE_DEV_IO) ;;
 		*netbsd*)	AC_DEFINE([USE_I386_IOPL], [], [BSD i386 iopl])
 				use_i386_iopl=yes ;;
 		*openbsd*)	AC_DEFINE([USE_I386_IOPL], [], [BSD i386 iopl])
@@ -161,7 +161,7 @@ case $host_cpu in
 	;;
      x86_64*|amd64*)
 	case $host_os in
-		*freebsd*)	AC_DEFINE(USE_DEV_IO, 1, [BSD /dev/io]) ;;
+		*freebsd*|*dragonfly*)	AC_DEFINE(USE_DEV_IO, 1, [BSD /dev/io]) ;;
 		*netbsd*)	AC_DEFINE(USE_X86_64_IOPL, 1, [BSD X86_64 iopl])
 				use_x86_64_iopl=yes ;;
 		*openbsd*)	AC_DEFINE(USE_AMD64_IOPL, 1, [BSD AMD64 iopl])
@@ -185,26 +185,7 @@ if test x$use_x86_64_iopl = xyes; then
                 [AC_MSG_ERROR([cannot find library for x86_64_iopl])])
 fi
 
-PKG_CHECK_MODULES(XORG, [xorg-server >= 1.0.1] xproto $REQUIRED_MODULES)
-
-PKG_CHECK_EXISTS([xorg-server >= 1.1.0],
-                 [AC_DEFINE([HAVE_XORG_SERVER_1_1_0], 1,
-                            [Has version 1.1.0 or greater of the Xserver])])
-
-PKG_CHECK_EXISTS([xorg-server > 1.4.99],
-		[AC_DEFINE([HAVE_XORG_SERVER_1_5_0], 1,
-		[Has version 1.5.0 or greater of the Xserver])])
-
-PKG_CHECK_EXISTS([xorg-server >= 1.3.99.0 xorg-server <= 1.4.0.90],
-                 [AC_DEFINE([CALL_CONVERSION_PROC], 1,
-                            [Call conversion_proc from within the driver, as
-                             Xserver doesn't])])
-PKG_CHECK_EXISTS([xorg-server > 1.4.0.90],
-		 [AC_DEFINE([ABS_VALUATOR_AXES], 1,
-			    [Define absolute valuator axes])])
-PKG_CHECK_EXISTS([xorg-server >= 1.6.0],
-		 [AC_DEFINE([NO_MOUSE_MODULE], 1,
-			    [Do not include built-in mouse module fallback])])
+PKG_CHECK_MODULES(XORG, [xorg-server >= 1.18] xproto $REQUIRED_MODULES)
 
 # Checks for libraries.
 
