@@ -39,15 +39,10 @@
  *
  */
 
-
-/*****************************************************************************
- *	Standard Headers
- ****************************************************************************/
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <X11/X.h>
 #include <X11/Xproto.h>
 
@@ -132,10 +127,10 @@ static void MouseCtrl(DeviceIntPtr device, PtrCtrl *ctrl);
  *****************************************************************************/
 typedef struct {
    int                 screenNum;
-   Bool                vmmouseAvailable;
+   bool                vmmouseAvailable;
    VMMOUSE_INPUT_DATA  vmmousePrevInput;
-   Bool                isCurrRelative;
-   Bool                absoluteRequested;
+   bool                isCurrRelative;
+   bool                absoluteRequested;
 } VMMousePrivRec, *VMMousePrivPtr;
 
 InputDriverRec VMMOUSE = {
@@ -209,7 +204,7 @@ VMMousePreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
    /* Enable hardware access. */
    if (!xorgHWAccess) {
       if (xf86EnableIO())
-          xorgHWAccess = TRUE;
+          xorgHWAccess = true;
       else {
           rc = BadValue;
           goto error;
@@ -233,8 +228,8 @@ VMMousePreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
       goto error;
    }
 
-   mPriv->absoluteRequested = FALSE;
-   mPriv->vmmouseAvailable = TRUE;
+   mPriv->absoluteRequested = false;
+   mPriv->vmmouseAvailable = true;
 
    /* Settup the pInfo */
    pInfo->type_name = XI_MOUSE;
@@ -345,7 +340,7 @@ VMMouseDoPostEvent(InputInfoPtr pInfo, int buttons, int dx, int dy)
     VMMousePrivPtr mPriv;
     int truebuttons;
     int id, change;
-    Bool mouseMoved = FALSE;
+    bool mouseMoved = false;
 
     pMse = pInfo->private;
     mPriv = (VMMousePrivPtr)pMse->mousePriv;
@@ -610,8 +605,8 @@ VMMouseUnInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
  *	DEVICE_OFF and DEVICE_CLOSE phase
  *
  * Results:
- * 	TRUE, if sucessful
- *	FALSE, if failed
+ * 	true, if sucessful
+ *	false, if failed
  *
  * Side effects:
  * 	Absolute pointing device is enabled during DEVICE_ON
@@ -637,7 +632,7 @@ VMMouseDeviceControl(DeviceIntPtr device, int mode)
 
    switch (mode){
    case DEVICE_INIT:
-      device->public.on = FALSE;
+      device->public.on = false;
       /*
        * [KAZU-241097] We don't know exactly how many buttons the
        * device has, so setup the map with the maximum number.
@@ -704,11 +699,11 @@ VMMouseDeviceControl(DeviceIntPtr device, int mode)
 		*/
 	       if (!VMMouseClient_Enable()) {
 		  xf86Msg(X_ERROR, "VMWARE(0): vmmouse enable failed\n");
-		  mPriv->vmmouseAvailable = FALSE;
-		  device->public.on = FALSE;
-		  return FALSE;
+		  mPriv->vmmouseAvailable = false;
+		  device->public.on = false;
+		  return false;
 	       } else {
-		  mPriv->vmmouseAvailable = TRUE;
+		  mPriv->vmmouseAvailable = true;
 		  xf86Msg(X_INFO, "VMWARE(0): vmmouse enabled\n");
 	       }
 	    }
@@ -717,7 +712,7 @@ VMMouseDeviceControl(DeviceIntPtr device, int mode)
 	 }
       }
       pMse->lastButtons = 0;
-      device->public.on = TRUE;
+      device->public.on = true;
       FlushButtons(pMse);
       break;
    case DEVICE_OFF:
@@ -728,8 +723,8 @@ VMMouseDeviceControl(DeviceIntPtr device, int mode)
 	 VMMousePrivPtr mPriv = (VMMousePrivPtr)pMse->mousePriv;
 	 if( mPriv->vmmouseAvailable ) {
 	    VMMouseClient_Disable();
-            mPriv->vmmouseAvailable = FALSE;
-            mPriv->absoluteRequested = FALSE;
+            mPriv->vmmouseAvailable = false;
+            mPriv->absoluteRequested = false;
 	 }
 
 	 xf86RemoveEnabledDevice(pInfo);
@@ -740,7 +735,7 @@ VMMouseDeviceControl(DeviceIntPtr device, int mode)
 	 xf86CloseSerial(pInfo->fd);
 	 pInfo->fd = -1;
       }
-      device->public.on = FALSE;
+      device->public.on = false;
       usleep(300000);
       break;
 
@@ -793,7 +788,7 @@ VMMouseReadInput(InputInfoPtr pInfo)
        * position.
        */
       VMMouseClient_RequestAbsolute();
-      mPriv->absoluteRequested = TRUE;
+      mPriv->absoluteRequested = true;
       LogMessageVerbSigSafe(X_INFO, -1, "VMWARE(0): vmmouse enable absolute mode\n");
    }
 
@@ -944,15 +939,13 @@ VMMouseSwitchMode(ClientPtr client, DeviceIntPtr dev, int mode)
  * 	This function was called by Xserver to convert valuators to X and Y
  *
  * Results:
- * 	TRUE
+ * 	true
  *
  * Side effects:
  * 	X and Y was converted according to current Screen dimension
  *
  *----------------------------------------------------------------------
  */
-
-#ifdef XFree86LOADER
 
 /*
  *----------------------------------------------------------------------
@@ -984,7 +977,7 @@ VMMouseUnplug(pointer p)
  * 	integrate the  module infto the XFree86 loader architecutre.
  *
  * Results:
- * 	TRUE
+ * 	true
  *
  * Side effects:
  * 	Regular mouse module was loaded as a submodule. In case
@@ -1000,10 +993,10 @@ VMMousePlug(pointer	module,
 	    int		*errmaj,
 	    int		*errmin)
 {
-   static Bool Initialised = FALSE;
+   static bool Initialised = false;
 
    if (!Initialised)
-      Initialised = TRUE;
+      Initialised = true;
 
    xf86Msg(X_INFO, "VMWARE(0): VMMOUSE module was loaded\n");
    xf86AddInputDriver(&VMMOUSE, module, 0);
@@ -1032,4 +1025,3 @@ _X_EXPORT XF86ModuleData vmmouseModuleData = {
    VMMousePlug,
    VMMouseUnplug
 };
-#endif /* XFree86LOADER */

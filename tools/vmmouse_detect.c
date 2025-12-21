@@ -24,11 +24,7 @@
  * the sale, use or other dealings in this Software without prior written
  * authorization from the copyright holder(s) and author(s).
  */
-
-
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdlib.h>
 #include <signal.h>
@@ -55,7 +51,7 @@ main(void)
     */
    signal(SIGSEGV, segvCB);
 
-#if defined __i386__ || defined __x86_64__ 
+#if defined __i386__ || defined __x86_64__
    (void) xf86EnableIO();
    if (VMMouseClient_Enable()) {
       VMMouseClient_Disable();
