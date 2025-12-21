@@ -33,9 +33,8 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+
 #ifdef HAVE_XORG_CONFIG_H
 #include <xorg-config.h>
 #endif
@@ -57,9 +56,9 @@
 /***************************************************************************/
 /* I/O Permissions section                                                 */
 /***************************************************************************/
-static Bool ExtendedEnabled = false;
+static bool ExtendedEnabled = false;
 
-Bool
+bool
 xf86EnableIO()
 {
     if (ExtendedEnabled)
@@ -92,7 +91,7 @@ xf86DisableIO()
 #include <unistd.h>
 static int IoFd = -1;
 
-Bool
+bool
 xf86EnableIO()
 {
     if (IoFd >= 0)
@@ -118,12 +117,12 @@ xf86DisableIO()
 
 #elif defined(VMMOUSE_OS_GENERIC)
 
-static Bool ExtendedEnabled = false;
+static bool ExtendedEnabled = false;
 
 extern int ioperm(unsigned long __from, unsigned long __num, int __turn_on);
 extern int iopl(int __level);
 
-Bool xf86EnableIO(void)
+bool xf86EnableIO(void)
 {
     if (ExtendedEnabled)
 	return true;
@@ -182,9 +181,9 @@ xf86DisableIO(void)
 #include <sys/psw.h>
 #endif
 
-static Bool ExtendedEnabled = false;
+static bool ExtendedEnabled = false;
 
-Bool
+bool
 xf86EnableIO(void)
 {
     if (ExtendedEnabled)
