@@ -14,8 +14,8 @@ Build-Depends:
  quilt,
  xutils-dev (>= 1:7.5+4),
 Standards-Version: 3.9.6
-Vcs-Git: https://github.com/xlibre-deb/xserver-xlibre-input-vmmouse.git
-Vcs-Browser: https://github.com/xlibre-deb/xserver-xlibre-input-vmmouse
+Vcs-Git: https://github.com/xlibre-debian/xserver-xlibre-input-vmmouse.git
+Vcs-Browser: https://github.com/xlibre-debian/xserver-xlibre-input-vmmouse
 Homepage: https://github.com/X11Libre
 
 Package: xserver-xlibre-input-vmmouse
